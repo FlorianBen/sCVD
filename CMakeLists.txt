@@ -10,5 +10,14 @@ endif()
 # ########################################################################################
 
 # ---Build executable------------------------------------------------------------
-add_executable(sCVD main.cpp)
-target_link_libraries(sCVD Garfield::Garfield)
+add_executable(sCVD_alpha_trim main_alpha_trim.cpp)
+target_link_libraries(sCVD_alpha_trim Garfield::Garfield)
+
+add_executable(sCVD_alpha_srim main_alpha_srim.cpp)
+target_link_libraries(sCVD_alpha_srim Garfield::Garfield)
+
+add_executable(sCVD_mip main_mip.cpp)
+target_link_libraries(sCVD_mip Garfield::Garfield)
+
+add_executable(sCVD_gamma main_gamma.cpp)
+target_link_libraries(sCVD_gamma Garfield::Garfield)
