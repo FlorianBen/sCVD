@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
   int ne = 0;
   // Retrieve the clusters along the track.
   for (unsigned int i = 0; i < nMIP; ++i) {
-    track.TransportPhoton(x0, y0, z0, 0, 2e3, dx, dy, dz, ne);
+    track.TransportPhoton(x0, y0, z0, 0, 5.9e3, dx, dy, dz, ne);
     for (int j = 0; j < ne; ++j) {
       double xe = 0., ye = 0., ze = 0., te = 0., ee = 0.;
       double dxe = 0., dye = 0., dze = 0.;

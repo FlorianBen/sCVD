@@ -11,7 +11,7 @@
 #include <Garfield/Sensor.hh>
 #include <Garfield/Shaper.hh>
 #include <Garfield/TrackHeed.hh>
-#include <Garfield/TrackTrim.hh>
+#include <Garfield/TrackSrim.hh>
 #include <Garfield/ViewCell.hh>
 #include <Garfield/ViewField.hh>
 #include <Garfield/ViewSignal.hh>
@@ -67,15 +67,16 @@ int main(int argc, char *argv[]) {
   sensor.SetTimeWindow(tmin, tstep, nTimeBins);
 
   // Track TRIM
-  TrackTrim track;
+  TrackSrim track;
   track.SetSensor(&sensor);
-  const std::string filename = "EXYZ.txt";
+  const std::string filename = "data/Helium_in_Carbon.txt";
   const unsigned int nIons = 1;
   const unsigned int nSkip = 0;
-  if (!track.ReadFile(filename, nIons, nSkip)) {
-    std::cerr << "Reading TRIM EXYZ file failed.\n";
+  if (!track.ReadFile(filename)) {
+    std::cerr << "Reading SRIM file failed.\n";
     return 1;
   }
+  track.SetKineticEnergy(5.4e6);
   track.Print();
 
   // Simulate electron/hole drift lines using MC integration.
