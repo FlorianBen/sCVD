@@ -21,3 +21,6 @@ target_link_libraries(sCVD_mip Garfield::Garfield)
 
 add_executable(sCVD_gamma main_gamma.cpp)
 target_link_libraries(sCVD_gamma Garfield::Garfield)
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
   // Track TRIM
   TrackTrim track;
   track.SetSensor(&sensor);
-  const std::string filename = "EXYZ.txt";
+  const std::string filename = "data/EXYZ.txt";
   const unsigned int nIons = 1;
   const unsigned int nSkip = 0;
   if (!track.ReadFile(filename, nIons, nSkip)) {

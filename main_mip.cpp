@@ -57,12 +57,6 @@ int main(int argc, char *argv[]) {
   // fieldView.PlotContourWeightingField("pixel", "v");
   fieldView.Plot("v", "COLZ0");
 
-  // ViewCell cellView;
-  // cellView.SetCanvas(&canvas);
-  // cellView.SetComponent(&cmp);
-  // cellView.SetArea(xmin, ymin, xmax, ymax);
-  // cellView.Plot2d();
-
   // Timming information
   const unsigned int nTimeBins = 5000;
   const double tmin = -100.;
@@ -71,25 +65,13 @@ int main(int argc, char *argv[]) {
   sensor.SetTimeWindow(tmin, tstep, nTimeBins);
 
   // Set up Heed.
-  // TrackHeed track;
-  // track.SetSensor(&sensor);
-  // Set the particle type and momentum [eV/c].
-  // track.SetParticle("proton");
-  // track.SetMomentum(100.e9);
-
-  TrackTrim track;
-  // Connect the track to a sensor.
+  TrackHeed track;
   track.SetSensor(&sensor);
-  // Read the TRIM output file.
-  const std::string filename = "EXYZ.txt";
-  // Import 100 ions, skip the first 200 in the list.
-  const unsigned int nIons = 1;
-  const unsigned int nSkip = 0;
-  if (!track.ReadFile(filename, nIons, nSkip)) {
-    std::cerr << "Reading TRIM EXYZ file failed.\n";
-    return 1;
-  }
-  track.Print();
+  // Set the particle type and momentum [eV/c].
+  track.SetParticle("muon");
+  track.SetMomentum(100.e9);
+
+  const unsigned int nMIP = 1;
 
   // Simulate electron/hole drift lines using MC integration.
   AvalancheMC drift;
@@ -112,28 +94,23 @@ int main(int argc, char *argv[]) {
   double xc = 0., yc = 0., zc = 0., tc = 0., ec = 0., extra = 0.;
   int ne = 0;
   // Retrieve the clusters along the track.
-  for (unsigned int i = 0; i < nIons; ++i) {
+  for (unsigned int i = 0; i < nMIP; ++i) {
     track.NewTrack(x0, y0, z0, 0, dx, dy, dz);
 
     while (track.GetCluster(xc, yc, zc, tc, ne, ec, extra)) {
       //   // Loop over the electrons in the cluster.
-      drift.SetElectronSignalScalingFactor(ne);
-      drift.DriftElectron(xc, yc, zc, tc);
-      drift.SetHoleSignalScalingFactor(ne);
-      drift.DriftHole(xc, yc, zc, tc);
-      // for (int j = 0; j < ne; ++j) {
-      //   double xe = 0., ye = 0., ze = 0., te = 0., ee = 0.;
-      //   double dxe = 0., dye = 0., dze = 0.;
-      //   track.GetElectron(j, xe, ye, ze, te, ee, dxe, dye, dze);
-      //   // Simulate the electron and hole drift lines.
-      //   //drift.DriftElectron(xe, ye, ze, te);
-      //   //drift.DriftHole(xe, ye, ze, te);
-      // }
+      for (int j = 0; j < ne; ++j) {
+        double xe = 0., ye = 0., ze = 0., te = 0., ee = 0.;
+        double dxe = 0., dye = 0., dze = 0.;
+        track.GetElectron(j, xe, ye, ze, te, ee, dxe, dye, dze);
+        // Simulate the electron and hole drift lines.
+        drift.DriftElectron(xe, ye, ze, te);
+        drift.DriftHole(xe, ye, ze, te);
+      }
     }
-    //;
   }
 
-  sensor.ConvoluteSignals();
+  //sensor.ConvoluteSignals();
   if (plotDrift) {
     TCanvas *cd = new TCanvas("cd", "", 600, 600);
     vDrift.SetPlane(0, 0, -1, 0, 0, 0);
